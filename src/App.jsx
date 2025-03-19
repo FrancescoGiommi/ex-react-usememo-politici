@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, use } from "react";
+import { useState, useEffect, useMemo, memo } from "react";
 
 import "./App.css";
 
@@ -25,6 +25,31 @@ Obiettivo: Caricare e mostrare i politici in un’interfaccia chiara e leggibile
     ❌ Non usare useEffect per aggiornare l’array filtrato.
 
 Obiettivo: Migliorare le prestazioni evitando ricalcoli inutili quando il valore della ricerca non cambia. */
+
+//! Milestone 3: Ottimizzare il rendering delle card con React.memo
+
+/* Attualmente, ogni volta che l’utente digita nella barra di ricerca, tutte le card vengono ri-renderizzate, anche quelle che non sono cambiate.
+    Usa React.memo() per evitare il ri-render delle card quando le loro props non cambiano.
+    Aggiungi un console.log() dentro il componente Card per verificare che venga renderizzato solo quando necessario.
+
+Obiettivo: Se la lista filtrata cambia, solo le nuove card devono essere renderizzate, mentre le altre rimangono in memoria senza essere ridisegnate. */
+
+//! Bonus: Filtrare anche per posizione politica (position)
+
+/* Creare un array derivato che contiene tutte le posizioni politiche (position) disponibili, ma senza duplicati.
+    Aggiungere un <select> sopra la lista che permette di filtrare i politici anche in base alla loro posizione.
+    Modificare l’array filtrato per tenere conto sia della stringa di ricerca, sia della posizione selezionata. */
+const PoliticianCard = memo(({ image, name, position, biography }) => {
+  console.log("Card render");
+  return (
+    <div className="card mb-3">
+      <img className="card-img-top" src={image} alt={name} />
+      <h2 className="ps-2">{name}</h2>
+      <h3 className="ps-2">{position}</h3>
+      <p className="ps-2">{biography}</p>
+    </div>
+  );
+});
 function App() {
   const [politicians, setPoliticians] = useState([]);
 
@@ -57,16 +82,7 @@ function App() {
         <h1>Lista politici</h1>
         <div className="container">
           {filterPoliticians.map((politician) => (
-            <div className="card mb-3" key={politician.id}>
-              <img
-                className="card-img-top"
-                src={politician.image}
-                alt={politician.name}
-              />
-              <h2 className="ps-2">{politician.name}</h2>
-              <h3 className="ps-2">{politician.position}</h3>
-              <p className="ps-2">{politician.biography}</p>
-            </div>
+            <PoliticianCard key={politician.id} {...politician} />
           ))}
         </div>
       </div>
